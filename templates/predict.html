@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="card" style="max-width: 800px;">
+    <h2>Live Monitoring</h2>
+    
+    <div style="margin-bottom: 20px;">
+        <button id="startBtn" class="btn-success" style="width: 48%;" onclick="toggleCamera('start')">Start Camera</button>
+        <button id="stopBtn" class="btn-danger" style="width: 48%; display: none;" onclick="toggleCamera('stop')">Stop Camera</button>
+    </div>
+
+    <div style="position: relative; border: 3px solid #334155; border-radius: 8px; min-height: 400px; background: #000; display: flex; justify-content: center; align-items: center;">
+        <img id="videoStream" src="" style="display: none; width: 100%; border-radius: 5px;">
+        <span id="placeholderText" style="color: #64748b;">Camera is off. Press Start.</span>
+        
+        <div id="warning-overlay" style="display:none; position: absolute; top:0; left:0; width:100%; height:100%; background:rgba(255,0,0,0.5); color:white; font-size:40px; font-weight:bold; display:flex; justify-content:center; align-items:center;">
+            WAKE UP!
+        </div>
+    </div>
+</div>
+
+<audio id="alarm-sound" src="{{ url_for('static', filename='alarm.mp3') }}" loop></audio>
+
+<script>
+    const videoStream = document.getElementById('videoStream');
+    const placeholder = document.getElementById('placeholderText');
+    const startBtn = document.getElementById('startBtn');
+    const stopBtn = document.getElementById('stopBtn');
+    const overlay = document.getElementById('warning-overlay');
+    const alarmSound = document.getElementById('alarm-sound');
+    
+    let pollInterval;
+
+    function toggleCamera(action) {
+        fetch('/camera_control', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({action: action})
+        }).then(() => {
+            if (action === 'start') {
+                videoStream.src = '/video_feed';
+                videoStream.style.display = 'block';
+                placeholder.style.display = 'none';
+                startBtn.style.display = 'none';
+                stopBtn.style.display = 'inline-block';
+                
+                // Start checking for alarm status
+                pollInterval = setInterval(checkAlarm, 500);
+            } else {
+                videoStream.src = '';
+                videoStream.style.display = 'none';
+                placeholder.style.display = 'block';
+                startBtn.style.display = 'inline-block';
+                stopBtn.style.display = 'none';
+                
+                // Stop checking alarm and reset
+                clearInterval(pollInterval);
+                overlay.style.display = 'none';
+                alarmSound.pause();
+                alarmSound.currentTime = 0;
+            }
+        });
+    }
+
+    async function checkAlarm() {
+        try {
+            const res = await fetch('/alarm_status');
+            const data = await res.json();
+            if (data.alarm) {
+                overlay.style.display = 'flex';
+                if (alarmSound.paused) alarmSound.play();
+            } else {
+                overlay.style.display = 'none';
+                if (!alarmSound.paused) {
+                    alarmSound.pause();
+                    alarmSound.currentTime = 0;
+                }
+            }
+        } catch(e) {}
+    }
+</script>
+{% endblock %}

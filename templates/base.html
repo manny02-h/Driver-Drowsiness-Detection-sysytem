@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SafeDrive AI</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #0f172a; color: #f8fafc; margin: 0; display: flex; flex-direction: column; min-height: 100vh; }
+        header { background: #1e293b; padding: 20px; text-align: center; border-bottom: 2px solid #3b82f6; display: flex; justify-content: space-between; align-items: center; padding: 15px 40px;}
+        header h2 { margin: 0; color: #60a5fa; }
+        nav a { color: #cbd5e1; text-decoration: none; margin-left: 20px; font-weight: bold; font-size: 1.1em;}
+        nav a:hover { color: #3b82f6; }
+        main { flex: 1; padding: 40px 20px; display: flex; justify-content: center; align-items: flex-start; flex-direction: column; max-width: 1000px; margin: 0 auto; width: 100%;}
+        footer { background: #1e293b; text-align: center; padding: 15px; font-size: 0.9em; color: #94a3b8; margin-top: auto;}
+        .card { background: #1e293b; padding: 30px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); width: 100%; text-align: center; margin: 0 auto;}
+        input[type="text"], input[type="password"] { width: 90%; padding: 12px; margin: 10px 0; border-radius: 6px; border: 1px solid #334155; background: #0f172a; color: white; }
+        button { background: #3b82f6; color: white; border: none; padding: 12px 20px; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: bold; width: 100%; margin-top: 10px;}
+        button:hover { background: #2563eb; }
+        .btn-danger { background: #ef4444; } .btn-danger:hover { background: #dc2626; }
+        .btn-success { background: #10b981; } .btn-success:hover { background: #059669; }
+    </style>
+</head>
+<body>
+    <header>
+        <h2>SafeDrive AI</h2>
+        <nav>
+            {% if session.get('user') %}
+                <a href="{{ url_for('dashboard') }}">Dashboard</a>
+                <a href="{{ url_for('predict') }}">Predict</a>
+                <a href="{{ url_for('emergency') }}">Emergency Contact</a>
+                <a href="{{ url_for('logout') }}" style="color: #ef4444;">Logout</a>
+            {% else %}
+                <a href="{{ url_for('login') }}">Login</a>
+                <a href="{{ url_for('register') }}">Register</a>
+            {% endif %}
+        </nav>
+    </header>
+    
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+        <p>&copy; 2026 SafeDrive AI. Protecting lives through real-time facial landmark detection.</p>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Driver Drowsiness Detection</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Driver Drowsiness Monitor</h1>
+        <p>Detects yawning and closed eyes for more than 4 seconds.</p>
+        
+        <div class="video-container">
+            <img src="{{ url_for('video_feed') }}" alt="Webcam Feed">
+            <div id="warning-overlay" class="hidden">WAKE UP!</div>
+        </div>
+    </div>
+
+    <audio id="alarm-sound" src="{{ url_for('static', filename='alarm.mp3') }}" loop></audio>
+
+    <script>
+        const alarmSound = document.getElementById('alarm-sound');
+        const warningOverlay = document.getElementById('warning-overlay');
+
+        // Poll the server to check if alarm is triggered
+        setInterval(async () => {
+            try {
+                const response = await fetch('/alarm_status');
+                const data = await response.json();
+                
+                if (data.alarm) {
+                    if (alarmSound.paused) {
+                        alarmSound.play();
+                    }
+                    warningOverlay.classList.remove('hidden');
+                } else {
+                    if (!alarmSound.paused) {
+                        alarmSound.pause();
+                        alarmSound.currentTime = 0; // Reset audio
+                    }
+                    warningOverlay.classList.add('hidden');
+                }
+            } catch (error) {
+                console.error("Error fetching alarm status:", error);
+            }
+        }, 500); // Check every half second
+    </script>
+</body>
+</html>

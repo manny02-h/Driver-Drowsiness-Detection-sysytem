@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="card" style="max-width: 500px;">
+    <h2 style="color: #ef4444;">Emergency Setup</h2>
+    <p style="color: #94a3b8; margin-bottom: 30px;">
+        Provide a trusted contact. If the system detects you are falling asleep at the wheel, it will automatically send an SMS to this number.
+    </p>
+    
+    <div style="background: #0f172a; padding: 25px; border-radius: 8px;">
+        <p style="font-size: 1.1em;">Current Linked Contact:<br> <strong style="color: #60a5fa; font-size: 1.3em;">{{ contact if contact else 'No Number Assigned' }}</strong></p>
+        <hr style="border-color: #334155; margin: 20px 0;">
+        
+        <form action="/emergency" method="POST">
+            <input type="text" name="contact" placeholder="Enter number (e.g., +1234567890)" required>
+            <button type="submit" class="btn-danger">Save Emergency Number</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

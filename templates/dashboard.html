@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="card">
+    <h2 style="color: #60a5fa; font-size: 2.5em; margin-bottom: 10px;">Welcome to the Dashboard, {{ user }}!</h2>
+    <p style="color: #cbd5e1; font-size: 1.2em; line-height: 1.8; text-align: center; max-width: 800px; margin: 0 auto 30px auto;">
+        This intelligent system detects driver fatigue in real-time. Using deep learning-based facial landmark detection, it maps 468 critical points on the face to monitor blinking patterns and yawning. When prolonged eye closure is detected, the system immediately generates auditory alerts and dispatches an emergency SMS.
+    </p>
+
+    <div style="display: flex; gap: 20px; justify-content: center; align-items: center; flex-wrap: wrap;">
+        
+        <div style="background: #0f172a; padding: 15px; border-radius: 8px; width: 45%; min-width: 300px;">
+            <img src="static/img1.jpg" alt="AI Technology" style="width: 100%; border-radius: 8px; border: 2px solid #334155;">
+            <h4 style="color: #f8fafc; margin-top: 15px;">Real-Time Monitoring</h4>
+            <p style="color: #94a3b8; font-size: 0.9em;">Continuous tracking via web camera feeds.</p>
+        </div>
+
+        <div style="background: #0f172a; padding: 15px; border-radius: 8px; width: 45%; min-width: 300px;">
+            <img src="static/img2.jpg" height="250px" alt="Driver Dashboard" style="width: 100%; border-radius: 8px; border: 2px solid #334155;">
+            <h4 style="color: #f8fafc; margin-top: 15px;">Alert Mechanics</h4>
+            <p style="color: #94a3b8; font-size: 0.9em;">Immediate SMS dispatch to saved contacts.</p>
+        </div>
+
+    </div>
+
+    <div style="margin-top: 40px;">
+        <a href="{{ url_for('predict') }}"><button class="btn-success" style="width: auto; padding: 15px 40px; font-size: 1.2em;">Launch the Predict Scanner</button></a>
+    </div>
+</div>
+{% endblock %}
